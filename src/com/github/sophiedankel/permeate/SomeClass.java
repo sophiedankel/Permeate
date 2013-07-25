@@ -1,4 +1,4 @@
-package TestPkg;
+package com.github.sophiedankel.permeate;
 
 public class SomeClass {
 	
