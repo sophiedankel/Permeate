@@ -1,5 +1,7 @@
 package com.github.sophiedankel.permeate;
 
+// MyDetector from "custom lint rules" tutorial - for reference
+
 import java.util.Collection;
 import java.util.Collections;
 

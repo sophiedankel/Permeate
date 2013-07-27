@@ -1,6 +1,7 @@
 package com.github.sophiedankel.permeate;
 
 import com.github.sophiedankel.permeate.MyDetector;
+import com.github.sophiedankel.permeate.rules.XmlPermissionsDetector;
 
 import java.util.Arrays;
 import java.util.List;
