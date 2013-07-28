@@ -12,6 +12,7 @@ import com.android.tools.lint.detector.api.Issue;
 import com.android.tools.lint.detector.api.ResourceXmlDetector;
 import com.android.tools.lint.detector.api.Scope;
 import com.android.tools.lint.detector.api.Severity;
+import com.android.tools.lint.detector.api.Speed;
 import com.android.tools.lint.detector.api.XmlContext;
 
 public class MyDetector extends ResourceXmlDetector {
@@ -19,9 +20,15 @@ public class MyDetector extends ResourceXmlDetector {
             "MyId",
             "My summary of the issue",
             "My longer explanation of the issue",
+            "My longer explanation of the issue, even longer for some reason",
             Category.CORRECTNESS, 6, Severity.WARNING,
             MyDetector.class,
             Scope.RESOURCE_FILE_SCOPE);
+    
+    @Override
+    public Speed getSpeed() {
+        return Speed.FAST;
+    }
     
     @Override
     public Collection<String> getApplicableElements() {
