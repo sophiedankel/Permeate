@@ -1,6 +1,5 @@
 package com.github.sophiedankel.permeate.rules;
 
-import static com.android.SdkConstants.ANDROID_MANIFEST_XML;
 import static com.android.SdkConstants.ANDROID_URI;
 import static com.android.SdkConstants.ATTR_NAME;
 
@@ -23,12 +22,14 @@ import java.util.EnumSet;
 public class XmlPermissionsDetector extends Detector implements Detector.XmlScanner {
 	/** The issue detected */
 	public static final Issue ISSUE = Issue.create(
-            "FindsAllPermissions", //$NON-NLS-1$
+            "FindsAllPerms", //$NON-NLS-1$
             "Finds all declared permissions",
             "Looks for all user-defined and system-defined permission declarations in " +
             "AndroidManifest.xml file.",
+            
             "Looks for all user-defined and system-defined permission declarations in " +
-            "AndroidManifest.xml file.",
+            "AndroidManifest.xml file. Longer explanation",
+            
             Category.SECURITY,
             2,
             Severity.WARNING,
