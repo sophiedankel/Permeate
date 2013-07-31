@@ -27,8 +27,8 @@ public class XmlPermissionsDetector extends Detector implements Detector.XmlScan
             "Looks for all user-defined and system-defined permission declarations in " +
             "AndroidManifest.xml file.",
             
-            "Looks for all user-defined and system-defined permission declarations in " +
-            "AndroidManifest.xml file. Longer explanation",
+            "Identifying all declared permissions is the first step to detecting which " +
+            "declared permissions are unnecessary.",
             
             Category.SECURITY,
             2,
