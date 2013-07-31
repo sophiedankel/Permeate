@@ -1,2 +1,2 @@
 Manifest-Version: 1.0
-Lint-Registry: com.github.sophiedankel.permeate.MyIssueRegistry
+Lint-Registry: com.github.sophiedankel.permeate.PermeateIssueRegistry

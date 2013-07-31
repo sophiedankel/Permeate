@@ -8,8 +8,8 @@ import java.util.List;
 import com.android.tools.lint.client.api.IssueRegistry;
 import com.android.tools.lint.detector.api.Issue;
 
-public class MyIssueRegistry extends IssueRegistry {
-    public MyIssueRegistry() {
+public class PermeateIssueRegistry extends IssueRegistry {
+    public PermeateIssueRegistry() {
     }
 
     @Override
