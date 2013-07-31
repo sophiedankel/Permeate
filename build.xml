@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project>
+
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+
+    <target name="compile">
+        <mkdir dir="build/classes"/>
+        <javac srcdir="src" destdir="build/classes"/>
+    </target>
+
+    <target name="jar">
+        <jar destfile="~/.android/lint/XmlPerms.jar" basedir="build/classes">
+            <manifest>
+                <attribute name="Main-Class" 
+                    value="com.github.sophiedankel.permeate.XmlPermissionsDetector"/>
+                <attribute name="Manifest-File"
+                    value="com.github.sophiedankel.permeate.manifest"
+                <attribute name="Issue-Registry"
+                    value="com.github.sophiedankel.permeate.MyIssueRegistry"
+            </manifest>
+        </jar>
+    </target>
+
+    <target name="run">
+        <java jar="~/.android/lint/XmlPerms.jar" fork="true"/>
+    </target>
+
+</project>
