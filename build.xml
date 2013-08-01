@@ -2,13 +2,17 @@
 
 <project name="permeate" default="clean">
     
-    <property file="build.properties" />
-    <classpath>
-        <pathelement path="${classpath}"/>
-        	<fileset dir="${android.dir}/lib">
-        	    <include name="**/*.jar"/>
-        	</fileset>
-	</classpath>
+	<path id="classpath">
+	    <pathelement location="${android.dir}/lib"/>
+	    <fileset dir="${android.dir}/lib">
+        	<include name="**/*.jar" />
+    	</fileset>
+   		<fileset dir="${build.dir}">
+        	<include name="*.class" />
+    	</fileset>
+	</path>
+
+	<echo message="${classpath}"/>
 
     <target name="clean">
         <delete dir="${build.dir}"/>
