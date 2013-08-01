@@ -6,7 +6,7 @@
 
     <target name="clean">
         <delete dir="${build.dir}"/>
-        <delete file="${lint.lib.dir}/XmlPerms.jar"
+        <delete file="${lint.lib.dir}/xmlperms.jar"
     </target>
 
     <target name="init" depends="clean">
@@ -21,8 +21,7 @@
         <mkdir dir="${dist.dir}"
         <jar destfile="XmlPerms.jar" basedir="${dist.dir}">
             <manifest file="MANIFEST.MF">
-                <attribute name="Manifest-Version"
-                	value="1.0"/>
+                <attribute name="Manifest-Version" value="1.0"/>
                 <attribute name="Lint-Registry"
 					value="com.github.sophiedankel.permeate.PermeateIssueRegistry"/>
             </manifest>
@@ -32,11 +31,11 @@
     </target>
     
     <target name="install" depends="dist">
-        <move file="XmlPerms.jar" todir="${lint.lib.dir}"/>
+        <move file="xmlperms.jar" todir="${lint.lib.dir}"/>
     </target>
 
     <target name="run" depends="install">
-        <java jar="${lint.lib.dir}/XmlPerms.jar" fork="true"/>
+        <java jar="${lint.lib.dir}/xmlperms.jar" fork="true"/>
     </target>
 
 </project>
