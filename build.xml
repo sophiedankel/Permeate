@@ -20,14 +20,14 @@
     <target name="dist" depends="compile">
         <mkdir dir="${dist.dir}"
         <jar destfile="XmlPerms.jar" basedir="${dist.dir}">
-            <manifest>
-                <attribute name="Main-Class"
-                    value="com.github.sophiedankel.permeate.XmlPermissionsDetector"/>
+            <manifest file="MANIFEST.MF">
                 <attribute name="Manifest-Version"
-                	value="Manifest-Version: 1.0"/>
+                	value="1.0"/>
                 <attribute name="Lint-Registry"
-					value="Lint-Registry: com.github.sophiedankel.permeate.PermeateIssueRegistry"/>
+					value="com.github.sophiedankel.permeate.PermeateIssueRegistry"/>
             </manifest>
+            <file name="Main-Class"
+            	value="com.github.sophiedankel.permeate.XmlPermissionsDetector"/>
         </jar>
     </target>
     
