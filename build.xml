@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="permeate" default="clean" basedir=".">
+<project name="permeate" default="clean">
     
     <property file="build.properties" />
+    <classpath>
+        <pathelement path="${classpath}"/>
+        	<fileset dir="${android.dir}/lib">
+        	    <include name="**/*.jar"/>
+        	</fileset>
+	</classpath>
 
     <target name="clean">
         <delete dir="${build.dir}"/>
-        <delete file="${file.path}"/>
+        <delete file="${dist.dir}"/>
     </target>
 
     <target name="init" depends="clean">
@@ -32,7 +38,7 @@
     </target>
     
     <target name="install" depends="dist">
-        <move file="{detector.name}.jar" todir="${lint.lib.dir}"/>
+        <copy file="{detector.name}.jar" todir="${lint.lib.dir}"/>
     </target>
 
 </project>
