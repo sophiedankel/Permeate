@@ -22,7 +22,7 @@ import java.util.EnumSet;
 public class XmlPermissionsDetector extends Detector implements Detector.XmlScanner {
 	/** The issue detected */
 	public static final Issue ISSUE = Issue.create(
-            "FindsAllPerms", //$NON-NLS-1$
+            "FindsAllPermissions", //$NON-NLS-1$
             "Finds all declared permissions",
             "Looks for all user-defined and system-defined permission declarations in " +
             "AndroidManifest.xml file.",

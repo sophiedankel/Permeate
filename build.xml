@@ -1,31 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project>
+<project name="permeate" default="compile" basedir=".">
+    
+    <property file="build.properties" />
 
     <target name="clean">
-        <delete dir="build"/>
+        <delete dir="${build.dir}"/>
+        <delete file="${lint.lib.dir}/XmlPerms.jar"
     </target>
 
-    <target name="compile">
-        <mkdir dir="build/classes"/>
-        <javac srcdir="src" destdir="build/classes"/>
+    <target name="init" depends="clean">
+        <mkdir dir="${build.classes.dir}"/>
+    </target>
+    
+    <target name="compile" depends="init">
+        <javac srcdir="src" destdir="${build.classes.dir}"/>
     </target>
 
-    <target name="jar">
-        <jar destfile="~/.android/lint/XmlPerms.jar" basedir="build/classes">
+    <target name="dist" depends="compile">
+        <mkdir dir="${dist.dir}"
+        <jar destfile="XmlPerms.jar" basedir="${dist.dir}">
             <manifest>
-                <attribute name="Main-Class" 
+                <attribute name="Main-Class"
                     value="com.github.sophiedankel.permeate.XmlPermissionsDetector"/>
-                <attribute name="Manifest-File"
-                    value="com.github.sophiedankel.permeate.manifest"
-                <attribute name="Issue-Registry"
-                    value="com.github.sophiedankel.permeate.MyIssueRegistry"
+                <attribute name="Manifest-Version"
+                	value="Manifest-Version: 1.0"/>
+                <attribute name="Lint-Registry"
+					value="Lint-Registry: com.github.sophiedankel.permeate.PermeateIssueRegistry"/>
             </manifest>
         </jar>
     </target>
+    
+    <target name="install" depends="dist">
+        <move file="XmlPerms.jar" todir="${lint.lib.dir}"/>
+    </target>
 
-    <target name="run">
-        <java jar="~/.android/lint/XmlPerms.jar" fork="true"/>
+    <target name="run" depends="install">
+        <java jar="${lint.lib.dir}/XmlPerms.jar" fork="true"/>
     </target>
 
 </project>
