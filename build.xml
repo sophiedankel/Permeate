@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="permeate" default="compile" basedir=".">
+<project name="permeate" default="clean" basedir=".">
     
     <property file="build.properties" />
 
     <target name="clean">
         <delete dir="${build.dir}"/>
-        <delete file="${lint.lib.dir}/xmlperms.jar"
+        <delete file="${file.path}"/>
     </target>
 
     <target name="init" depends="clean">
+        <mkdir dir="${build.dir}"/>
         <mkdir dir="${build.classes.dir}"/>
     </target>
     
@@ -18,8 +19,8 @@
     </target>
 
     <target name="dist" depends="compile">
-        <mkdir dir="${dist.dir}"
-        <jar destfile="XmlPerms.jar" basedir="${dist.dir}">
+        <mkdir dir="${dist.dir}"/>
+        <jar destfile="${detector.name}.jar" basedir="${dist.dir}">
             <manifest file="MANIFEST.MF">
                 <attribute name="Manifest-Version" value="1.0"/>
                 <attribute name="Lint-Registry"
@@ -31,11 +32,7 @@
     </target>
     
     <target name="install" depends="dist">
-        <move file="xmlperms.jar" todir="${lint.lib.dir}"/>
-    </target>
-
-    <target name="run" depends="install">
-        <java jar="${lint.lib.dir}/xmlperms.jar" fork="true"/>
+        <move file="{detector.name}.jar" todir="${lint.lib.dir}"/>
     </target>
 
 </project>
