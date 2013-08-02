@@ -24,14 +24,13 @@
         <javac srcdir="${src-dir}" destdir="${build.classes.dir}" includeantruntime="false">
     		<classpath refid="compile.classpath"/>
     	</javac>
-    	
-    	<echo message="${classpath}"/>
     </target>
 
     <target name="dist" depends="compile">
         <mkdir dir="${dist.dir}"/>
-        <jar destfile="${dist.dir}/${detector.name}.jar">
-            <fileset dir="${build.classes.dir}" includes="XmlPermissionsDetector.class"/>
+            <jar destfile="${dist.dir}/${detector.name}.jar">
+            <fileset dir="${build.classes.dir}" 
+                includes="com/github/sophiedankel/permeate/rules/XmlPermissionsDetector.class"/>
             <manifest>
                 <attribute name="Manifest-Version" value="1.0"/>
                 <attribute name="Lint-Registry"
