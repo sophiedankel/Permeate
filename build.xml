@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<project name="permeate" default="clean">
+<project name="permeate" default="compile">
+    
+    <property file="build.properties"/>
     
 	<path id="compile.classpath">
 	    <fileset dir="${android.lib.dir}">
-        	<include name="**/*.jar" />
+        	<include name="**/*.jar"/>
     	</fileset>
-    	<javac srcdir="${src}">
-    	    <classpath refid="compile.classpath"/>
-    	</javac>
 	</path>
-
-	<echo message="${classpath}"/>
 
     <target name="clean">
         <delete dir="${build.dir}"/>
@@ -24,19 +21,22 @@
     </target>
     
     <target name="compile" depends="init">
-        <javac srcdir="src" destdir="${build.classes.dir}"/>
+        <javac srcdir="${src-dir}" destdir="${build.classes.dir}" includeantruntime="false">
+    		<classpath refid="compile.classpath"/>
+    	</javac>
+    	
+    	<echo message="${classpath}"/>
     </target>
 
     <target name="dist" depends="compile">
         <mkdir dir="${dist.dir}"/>
-        <jar destfile="${dist.dir}/${detector.name}.jar" basedir="${build.classes.dir}">
-            <manifest file="MANIFEST.MF">
+        <jar destfile="${dist.dir}/${detector.name}.jar">
+            <fileset dir="${build.classes.dir}" includes="XmlPermissionsDetector.class"/>
+            <manifest>
                 <attribute name="Manifest-Version" value="1.0"/>
                 <attribute name="Lint-Registry"
 					value="com.github.sophiedankel.permeate.PermeateIssueRegistry"/>
             </manifest>
-            <file name="Main-Class"
-            	value="com.github.sophiedankel.permeate.XmlPermissionsDetector"/>
         </jar>
     </target>
     
