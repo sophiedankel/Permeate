@@ -2,14 +2,13 @@
 
 <project name="permeate" default="clean">
     
-	<path id="classpath">
-	    <pathelement location="${android.dir}/lib"/>
-	    <fileset dir="${android.dir}/lib">
+	<path id="compile.classpath">
+	    <fileset dir="${android.lib.dir}">
         	<include name="**/*.jar" />
     	</fileset>
-   		<fileset dir="${build.dir}">
-        	<include name="*.class" />
-    	</fileset>
+    	<javac srcdir="${src}">
+    	    <classpath refid="compile.classpath"/>
+    	</javac>
 	</path>
 
 	<echo message="${classpath}"/>
@@ -30,7 +29,7 @@
 
     <target name="dist" depends="compile">
         <mkdir dir="${dist.dir}"/>
-        <jar destfile="${detector.name}.jar" basedir="${dist.dir}">
+        <jar destfile="${dist.dir}/${detector.name}.jar" basedir="${build.classes.dir}">
             <manifest file="MANIFEST.MF">
                 <attribute name="Manifest-Version" value="1.0"/>
                 <attribute name="Lint-Registry"
@@ -42,7 +41,7 @@
     </target>
     
     <target name="install" depends="dist">
-        <copy file="{detector.name}.jar" todir="${lint.lib.dir}"/>
+        <copy file="${dist.dir}/${detector.name}.jar" todir="${lint.lib.dir}"/>
     </target>
 
 </project>
