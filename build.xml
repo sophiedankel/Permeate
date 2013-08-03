@@ -30,7 +30,8 @@
         <mkdir dir="${dist.dir}"/>
             <jar destfile="${dist.dir}/${detector.name}.jar">
             <fileset dir="${build.classes.dir}" 
-                includes="com/github/sophiedankel/permeate/rules/XmlPermissionsDetector.class"/>
+                includes="com/github/sophiedankel/permeate/rules/XmlPermissionsDetector.class,
+                com/github/sophiedankel/permeate/PermeateIssueRegistry.class"/>
             <manifest>
                 <attribute name="Manifest-Version" value="1.0"/>
                 <attribute name="Lint-Registry"
