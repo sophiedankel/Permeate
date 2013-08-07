@@ -28,9 +28,21 @@
 
     <target name="dist" depends="compile">
         <mkdir dir="${dist.dir}"/>
-            <jar destfile="${dist.dir}/${detector.name}.jar">
+        <!-- first detector -->
+        <jar destfile="${dist.dir}/${detector1.name}.jar">
             <fileset dir="${build.classes.dir}" 
                 includes="com/github/sophiedankel/permeate/rules/XmlPermissionsDetector.class,
+                com/github/sophiedankel/permeate/PermeateIssueRegistry.class"/>
+            <manifest>
+                <attribute name="Manifest-Version" value="1.0"/>
+                <attribute name="Lint-Registry"
+					value="com.github.sophiedankel.permeate.PermeateIssueRegistry"/>
+            </manifest>
+        </jar>
+        <!-- second detector -->
+        <jar destfile="${dist.dir}/${detector2.name}.jar">
+            <fileset dir="${build.classes.dir}" 
+                includes="com/github/sophiedankel/permeate/rules/UsesPermissionsDetector.class,
                 com/github/sophiedankel/permeate/PermeateIssueRegistry.class"/>
             <manifest>
                 <attribute name="Manifest-Version" value="1.0"/>
@@ -41,7 +53,8 @@
     </target>
     
     <target name="install" depends="dist">
-        <copy file="${dist.dir}/${detector.name}.jar" todir="${lint.lib.dir}"/>
+        <copy file="${dist.dir}/${detector1.name}.jar" todir="${lint.lib.dir}"/>
+        <copy file="${dist.dir}/${detector2.name}.jar" todir="${lint.lib.dir}"/>
     </target>
 
 </project>
