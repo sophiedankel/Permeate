@@ -1,10 +1,13 @@
 package com.github.sophiedankel.permeate.rules;
 
+import static com.android.SdkConstants.ANDROID_MANIFEST_XML;
 import static com.android.SdkConstants.ANDROID_URI;
 import static com.android.SdkConstants.ATTR_NAME;
+import static com.android.SdkConstants.TAG_PERMISSION;
 
 import com.android.annotations.NonNull;
 import com.android.tools.lint.detector.api.Category;
+import com.android.tools.lint.detector.api.Context;
 import com.android.tools.lint.detector.api.Detector;
 import com.android.tools.lint.detector.api.Implementation;
 import com.android.tools.lint.detector.api.Issue;
@@ -16,7 +19,10 @@ import com.android.tools.lint.detector.api.XmlContext;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
+import java.io.File;
 import java.util.EnumSet;
+import java.util.Collection;
+import java.util.Collections;
 
 
 public class XmlPermissionsDetector extends Detector implements Detector.XmlScanner {
@@ -44,12 +50,22 @@ public class XmlPermissionsDetector extends Detector implements Detector.XmlScan
     }
 	
 	@Override
+    public boolean appliesTo(@NonNull Context context, @NonNull File file) {
+        return file.getName().equals(ANDROID_MANIFEST_XML);
+    }
+	
+	@Override
+    public Collection<String> getApplicableElements() {
+        return Collections.singletonList(TAG_PERMISSION);
+    }
+	
+	@Override
     public void visitElement(@NonNull XmlContext context, @NonNull Element element) {
         Attr nameNode = element.getAttributeNodeNS(ANDROID_URI, ATTR_NAME);
         if (nameNode != null) {
             String permissionName = nameNode.getValue();
             context.report(ISSUE, element, context.getLocation(nameNode),
-            		"Permission detected in XML file, name: " + permissionName, null);
+            		"Permission declaration detected in XML file, name: " + permissionName, null);
         }
     }
 
