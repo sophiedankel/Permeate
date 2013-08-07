@@ -1,6 +1,7 @@
 package com.github.sophiedankel.permeate;
 
 import com.github.sophiedankel.permeate.rules.XmlPermissionsDetector;
+import com.github.sophiedankel.permeate.rules.UsesPermissionsDetector;
 
 import java.util.Arrays;
 import java.util.List;
@@ -15,7 +16,8 @@ public class PermeateIssueRegistry extends IssueRegistry {
     @Override
     public List<Issue> getIssues() {
         return Arrays.asList(
-                XmlPermissionsDetector.ISSUE
+                XmlPermissionsDetector.ISSUE,
+                UsesPermissionsDetector.ISSUE
         );
     }
 
