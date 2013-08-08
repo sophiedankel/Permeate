@@ -24,7 +24,7 @@ import java.util.EnumSet;
 import java.util.Collection;
 import java.util.Collections;
 
-public class UsesPermissionsDetector extends Detector implements Detector.XmlScanner {
+public class UsedPermissionsDetector extends Detector implements Detector.XmlScanner {
 	/** The issue detected */
 	public static final Issue ISSUE = Issue.create(
             "FindsUsedPermissions", //$NON-NLS-1$
@@ -38,7 +38,7 @@ public class UsesPermissionsDetector extends Detector implements Detector.XmlSca
             2,
             Severity.WARNING,
             new Implementation(
-                    UsesPermissionsDetector.class,
+                    UsedPermissionsDetector.class,
                     EnumSet.of(Scope.MANIFEST)));
 	
 	@NonNull
