@@ -21,7 +21,7 @@
     </target>
     
     <target name="compile" depends="init">
-        <javac srcdir="${src-dir}" destdir="${build.classes.dir}" includeantruntime="false">
+        <javac srcdir="${src.dir}" destdir="${build.classes.dir}" includeantruntime="false">
     		<classpath refid="compile.classpath"/>
     	</javac>
     </target>
