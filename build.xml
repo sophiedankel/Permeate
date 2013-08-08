@@ -28,10 +28,11 @@
 
     <target name="dist" depends="compile">
         <mkdir dir="${dist.dir}"/>
-        <jar destfile="${dist.dir}/${detector.name}.jar">
+        <jar destfile="${dist.dir}/${archive.name}.jar">
             <fileset dir="${build.classes.dir}" 
                 includes="com/github/sophiedankel/permeate/rules/XmlPermissionsDetector.class,
                 com/github/sophiedankel/permeate/rules/UsesPermissionsDetector.class,
+                com/github/sophiedankel/permeate/rules/EnforcedPermissionsDetector.class,
                 com/github/sophiedankel/permeate/PermeateIssueRegistry.class"/>
             <manifest>
                 <attribute name="Manifest-Version" value="1.0"/>
@@ -42,7 +43,7 @@
     </target>
     
     <target name="install" depends="dist">
-        <copy file="${dist.dir}/${detector.name}.jar" todir="${lint.lib.dir}"/>
+        <copy file="${dist.dir}/${archive.name}.jar" todir="${lint.lib.dir}"/>
     </target>
 
 </project>
