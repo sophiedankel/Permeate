@@ -25,10 +25,10 @@ import java.util.Collection;
 import java.util.Collections;
 
 
-public class XmlPermissionsDetector extends Detector implements Detector.XmlScanner {
+public class DeclaredPermissionsDetector extends Detector implements Detector.XmlScanner {
 	/** The issue detected */
 	public static final Issue ISSUE = Issue.create(
-            "FindsAllPermissions", //$NON-NLS-1$
+            "FindsDeclaredPermissions", //$NON-NLS-1$
             "Finds all declared permissions",
             "Looks for all user-defined and system-defined permission declarations in " +
             "AndroidManifest.xml file.",
@@ -40,7 +40,7 @@ public class XmlPermissionsDetector extends Detector implements Detector.XmlScan
             2,
             Severity.WARNING,
             new Implementation(
-                    XmlPermissionsDetector.class,
+                    DeclaredPermissionsDetector.class,
                     EnumSet.of(Scope.MANIFEST)));
 	
 	@NonNull
