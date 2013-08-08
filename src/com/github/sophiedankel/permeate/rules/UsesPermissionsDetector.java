@@ -38,7 +38,7 @@ public class UsesPermissionsDetector extends Detector implements Detector.XmlSca
             2,
             Severity.WARNING,
             new Implementation(
-                    XmlPermissionsDetector.class,
+                    UsesPermissionsDetector.class,
                     EnumSet.of(Scope.MANIFEST)));
 	
 	@NonNull
