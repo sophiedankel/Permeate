@@ -30,9 +30,10 @@
         <mkdir dir="${dist.dir}"/>
         <jar destfile="${dist.dir}/${archive.name}.jar">
             <fileset dir="${build.classes.dir}" 
-                includes="com/github/sophiedankel/permeate/rules/DeclaredPermissionsDetector.class,
-                com/github/sophiedankel/permeate/rules/UsedPermissionsDetector.class,
-                com/github/sophiedankel/permeate/rules/EnforcedPermissionsDetector.class,
+                includes="com/github/sophiedankel/permeate/rules/PermeateDetector.class,
+                com/github/sophiedankel/permeate/rules/APICall.class,
+                com/github/sophiedankel/permeate/rules/PermissionRecord.class,
+                com/github/sophiedankel/permeate/rules/APICallParse.class,
                 com/github/sophiedankel/permeate/PermeateIssueRegistry.class"/>
             <manifest>
                 <attribute name="Manifest-Version" value="1.0"/>
