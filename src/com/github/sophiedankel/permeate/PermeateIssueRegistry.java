@@ -1,8 +1,6 @@
 package com.github.sophiedankel.permeate;
 
-import com.github.sophiedankel.permeate.rules.DeclaredPermissionsDetector;
-import com.github.sophiedankel.permeate.rules.UsedPermissionsDetector;
-import com.github.sophiedankel.permeate.rules.EnforcedPermissionsDetector;
+import com.github.sophiedankel.permeate.rules.PermeateDetector;
 
 
 import java.util.Arrays;
@@ -18,9 +16,11 @@ public class PermeateIssueRegistry extends IssueRegistry {
     @Override
     public List<Issue> getIssues() {
         return Arrays.asList(
-                DeclaredPermissionsDetector.ISSUE,
-                UsedPermissionsDetector.ISSUE,
-                EnforcedPermissionsDetector.ISSUE
+                PermeateDetector.ENFORCED_ISSUE,
+                PermeateDetector.DECLARED_ISSUE,
+                PermeateDetector.USED_ISSUE,
+                PermeateDetector.API_CALL_ISSUE
+
         );
     }
 
