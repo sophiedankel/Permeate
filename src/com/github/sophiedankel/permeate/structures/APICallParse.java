@@ -1,4 +1,4 @@
-package structures;
+package com.github.sophiedankel.permeate.structures;
 
 import java.util.HashMap;
 import java.util.ArrayList;

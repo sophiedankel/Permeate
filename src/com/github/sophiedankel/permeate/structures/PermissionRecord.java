@@ -1,4 +1,4 @@
-package structures;
+package com.github.sophiedankel.permeate.structures;
 
 
 public class PermissionRecord 
