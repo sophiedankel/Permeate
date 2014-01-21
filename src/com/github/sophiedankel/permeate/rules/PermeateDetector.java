@@ -25,6 +25,10 @@ import org.objectweb.asm.tree.MethodNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
+import structures.APICall;
+import structures.APICallParse;
+import structures.PermissionRecord;
+
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
 import com.android.tools.lint.detector.api.Category;
