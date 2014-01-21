@@ -30,11 +30,11 @@
         <mkdir dir="${dist.dir}"/>
         <jar destfile="${dist.dir}/${archive.name}.jar">
             <fileset dir="${build.classes.dir}" 
-                includes="com/github/sophiedankel/permeate/rules/PermeateDetector.class,
-                com/github/sophiedankel/permeate/rules/APICall.class,
-                com/github/sophiedankel/permeate/rules/PermissionRecord.class,
-                com/github/sophiedankel/permeate/rules/APICallParse.class,
-                com/github/sophiedankel/permeate/PermeateIssueRegistry.class"/>
+                includes="${rules.dir}PermeateDetector.class,
+                ${structs.dir}APICall.class,
+                ${structs.dir}PermissionRecord.class,
+                ${structs.dir}APICallParse.class,
+                ${permeate.dir}PermeateIssueRegistry.class"/>
             <manifest>
                 <attribute name="Manifest-Version" value="1.0"/>
                 <attribute name="Lint-Registry"

@@ -111,13 +111,13 @@ public class APICallParse {
 	}
 	
 	public static void main(String[] args) {
-		String fileName = "APICalls.txt";
+		/**String fileName = "APICalls.txt";
 		APICallParse parser = new APICallParse(fileName);
 		HashMap<String, ArrayList<APICall>> APICalls = parser.APICalls;
 
 		ArrayList<String> keySet = new ArrayList<String>(APICalls.keySet());
 		
-		/**
+		
 		ArrayList<APICall> valueList;
 		String mostMethodsKey = keySet.get(0);
 		for (int i=0; i<keySet.size(); i++) {
