@@ -25,10 +25,6 @@ import org.objectweb.asm.tree.MethodNode;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Element;
 
-import structures.APICall;
-import structures.APICallParse;
-import structures.PermissionRecord;
-
 import com.android.annotations.NonNull;
 import com.android.annotations.Nullable;
 import com.android.tools.lint.detector.api.Category;
@@ -41,6 +37,9 @@ import com.android.tools.lint.detector.api.Scope;
 import com.android.tools.lint.detector.api.Severity;
 import com.android.tools.lint.detector.api.Speed;
 import com.android.tools.lint.detector.api.XmlContext;
+import com.github.sophiedankel.permeate.structures.APICall;
+import com.github.sophiedankel.permeate.structures.APICallParse;
+import com.github.sophiedankel.permeate.structures.PermissionRecord;
 
 public class PermeateDetector extends Detector implements Detector.XmlScanner, Detector.ClassScanner {
 	
@@ -93,7 +92,7 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
 	        2,
 	        Severity.WARNING,
 	        new Implementation(
-	        	UsedPermissionsDetector.class,
+	        	PermeateDetector.class,
 	        	EnumSet.of(Scope.MANIFEST)));
 	
 	
