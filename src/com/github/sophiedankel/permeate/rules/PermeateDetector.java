@@ -194,6 +194,8 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
         Attr permissionNode = element.getAttributeNodeNS(ANDROID_URI, ATTR_PERMISSION);
         Attr nameNode = element.getAttributeNodeNS(ANDROID_URI, ATTR_NAME);
 		String tagName = element.getTagName();
+		System.out.print("\nTag name : ");
+		System.out.print(tagName);
         if (nameNode != null) {
         	String permissionName = nameNode.getValue();
         	// add to list
@@ -208,10 +210,14 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
                 context.report(USED_ISSUE, element, context.getLocation(nameNode),
                 		"Permission usage detected in XML file, name: " + permissionName, null);
         	}
-        	else {	// enforced
+        	else if (permissionNode != null) {	// enforced
         		context.report(ENFORCED_ISSUE, element, context.getLocation(nameNode),
         				"The " + tagName + " implemented by the class " + nameNode.getValue() +
         				" requires permission " + permissionNode.getValue() + " to execute", null);
+        	}
+        	else {
+        		System.out.print("\nNO PERMISSION NODE !\n");
+
         	}
         }
     }
