@@ -216,7 +216,7 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
         				" requires permission " + permissionNode.getValue() + " to execute", null);
         	}
         	else {
-        		System.out.print("\nNO PERMISSION NODE !\n");
+        		// not a permission node
 
         	}
         }
