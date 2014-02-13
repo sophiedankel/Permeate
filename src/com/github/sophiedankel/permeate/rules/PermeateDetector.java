@@ -117,13 +117,13 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
 	private String fileName = "APICalls.txt";
 	private APICallParse parser = new APICallParse(fileName);
 	private ArrayList<PermissionRecord> allPermissionsList;
-	private ArrayList<String> XmlPermissionsList;
+	private ArrayList<String> xmlPermissionsList;
     
 
     /** Constructs a new {@link PermeateDetector} */
     public PermeateDetector() {
     	allPermissionsList = new ArrayList<PermissionRecord>();
-    	XmlPermissionsList = new ArrayList<String>();
+    	xmlPermissionsList = new ArrayList<String>();
     }
    
     @Override
@@ -193,34 +193,62 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
     public void visitElement(@NonNull XmlContext context, @NonNull Element element) {
         Attr permissionNode = element.getAttributeNodeNS(ANDROID_URI, ATTR_PERMISSION);
         Attr nameNode = element.getAttributeNodeNS(ANDROID_URI, ATTR_NAME);
-		String tagName = element.getTagName();
+		String message = "", tagName = element.getTagName();
+		Issue myIssue = null;
 		System.out.print("\nTag name : ");
 		System.out.print(tagName);
         if (nameNode != null) {
         	String permissionName = nameNode.getValue();
         	// add to list
-        	if (! XmlPermissionsList.contains(permissionName)) {
-        		XmlPermissionsList.add(permissionName);
+        	if (! xmlPermissionsList.contains(permissionName)) {
+        		xmlPermissionsList.add(permissionName);
         	}
         	if (tagName == TAG_SERVICE) { // declared
-                context.report(DECLARED_ISSUE, element, context.getLocation(nameNode),
-                		"Permission declaration detected in XML file, name: " + permissionName, null);
+        		myIssue = DECLARED_ISSUE;
+        		message = "Permission declaration detected in XML file, name: " + permissionName;
+
         	}
         	else if (tagName == TAG_PERMISSION || tagName == TAG_USES_PERMISSION) { // used
-                context.report(USED_ISSUE, element, context.getLocation(nameNode),
-                		"Permission usage detected in XML file, name: " + permissionName, null);
+        		myIssue = USED_ISSUE;
+        		message = "Permission usage detected in XML file, name: " + permissionName;
+
         	}
         	else if (permissionNode != null) {	// enforced
-        		context.report(ENFORCED_ISSUE, element, context.getLocation(nameNode),
-        				"The " + tagName + " implemented by the class " + nameNode.getValue() +
-        				" requires permission " + permissionNode.getValue() + " to execute", null);
+        		myIssue = ENFORCED_ISSUE;
+        		message = "The " + tagName + " implemented by the class " + nameNode.getValue() +
+        				" requires permission " + permissionNode.getValue() + " to execute";
+        	}
+        	
+        	if (myIssue != null) {
+        		context.report(myIssue, element, context.getLocation(nameNode), message, null);
         	}
         	else {
-        		// not a permission node
-
+        		message = "No applicable issue found.";
+        		context.report(null, element, context.getLocation(nameNode), message, null);
         	}
         }
     }
+	
+	 @Override
+	    public void afterCheckProject(@NonNull Context context) {
+		 
+		 String message = "";
+		 // comparison stuff
+		 if (allPermissionsList.size() == xmlPermissionsList.size()) {
+			 message = "Everything is OK: permissions match up.";
+		 }
+		 else if (allPermissionsList.size() > xmlPermissionsList.size()) {
+			 message = "permissions missing from XML file: program can't run";
+		 }
+		 else {
+			 message = "unused permissions in xml file - over-privilege";
+		 }
+		 
+         context.report(null, null, message, null);
 
+				 
+		//permission record allPermissionsList 
+	     //string xmlPermissionsList
+	 }
 
 }
