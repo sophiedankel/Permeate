@@ -83,7 +83,7 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
 	public static final Issue USED_ISSUE = Issue.create(
 			"FindsUsedPermissions", //$NON-NLS-1$
 	        "Finds all permission usage",
-	        "Looks for all <uses-permission> attributes in AndroidManifest.xml file.",
+	        "Looks for <uses-permission> attributes in AndroidManifest.xml file.",
 	            
 	        "Identifying the app's requested permission usage will help in determining which " +
 	        "included permissions are unnecessary.",
@@ -95,6 +95,23 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
 	        	PermeateDetector.class,
 	        	EnumSet.of(Scope.MANIFEST)));
 	
+	
+	public static final Issue PERMISSION_REFERENCE_ISSUE = Issue.create(
+			"FindsXMLPermissionReferences", //$NON-NLS-1$
+	        "Finds all references to permissions in AndroidManifest.xml",
+	        "Looks in AndroidManifest.xml file for the following attributes: <uses-permission>; " + 
+	        		"user-defined or system-defined permission declarations; android:permission attributes " +
+	        		"within activity, service, BroadcastReceiver and ContentProvider elements.",
+	            
+	        "Identifying the all references to permissions delcared app's manifest will help in determining which " +
+	        "of the included permissions are unnecessary.",
+	           
+	        Category.SECURITY,
+	        2,
+	        Severity.WARNING,
+	        new Implementation(
+	        	PermeateDetector.class,
+	        	EnumSet.of(Scope.MANIFEST)));
 	
 	
 	/** Permission-required API call detector */
@@ -112,6 +129,38 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
             new Implementation(
             		PermeateDetector.class,
                     Scope.CLASS_FILE_SCOPE));
+	
+	public static final Issue OVER_PRIVILEGE_ISSUE = Issue.create(
+            "FindsOverPrivilegedApps", //$NON-NLS-1$
+            "Determines if the app is over-privileged",
+            "Compares permissions found in AndroidManifest.xml with permissions used " +
+            "and reports when XML permissions are unnecessarily specified.",
+            
+            "This issue is detected after the project is checked, when the permission comparisons " +
+            		"are made. This is part of the results reporting mechanism for Permeate.",
+            
+            Category.SECURITY,
+            3,
+            Severity.WARNING,
+            new Implementation(
+            		PermeateDetector.class,
+            		EnumSet.of(Scope.MANIFEST)));
+	
+	public static final Issue UNDER_PRIVILEGE_ISSUE = Issue.create(
+            "FindsUnderPrivilegedApps", //$NON-NLS-1$
+            "Determines if the app is under-privileged",
+            "Compares permissions found in AndroidManifest.xml with permissions used " +
+            "and reports when XML permissions are missing.",
+            
+            "This issue is detected after the project is checked, when the permission comparisons " +
+            		"are made. This is part of the results reporting mechanism for Permeate.",
+            
+            Category.SECURITY,
+            3,
+            Severity.WARNING,
+            new Implementation(
+            		PermeateDetector.class,
+            		EnumSet.of(Scope.MANIFEST)));
 	
 	
 	private String fileName = "APICalls.txt";
@@ -142,6 +191,7 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
 
         String path = call.owner.replace('/', '.');
         
+        // records of permissions for this api call
         ArrayList<PermissionRecord> permissionsList = null;
         APICall apicall = null;
 
@@ -153,12 +203,18 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
             }
         }
         if (permissionsList != null) {
-        	allPermissionsList.addAll(permissionsList);
-            context.report(API_CALL_ISSUE, method, call, context.getLocation(call),
-                        "\n\nFound API call:\t" + path + "." + call.name + "\nPermissions:\t" + 
-                        permissionsList, null);
-            }
+        	for (int i=0; i< permissionsList.size(); i++)
+        	{
+        		if (! allPermissionsList.contains(permissionsList.get(i))) {
+        			allPermissionsList.add(permissionsList.get(i));
+        		}
+        	}
         }
+        context.report(API_CALL_ISSUE, method, call, context.getLocation(call),
+                    "\n\nFound API call:\t" + path + "." + call.name + "\nPermissions:\t" + 
+                    permissionsList, null);
+            
+    }
     
     
     
@@ -177,15 +233,19 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
 	
 	@Override
     public Collection<String> getApplicableElements() {		
-		return Arrays.asList(  // IF enforced
+		return Arrays.asList(  
+				// IF enforced
 				TAG_ACTIVITY, 
 				TAG_PROVIDER, 
 				TAG_RECEIVER, 
-				TAG_SERVICE, // IF declared
-				TAG_PERMISSION,  // IF used
+				// IF declared
+				TAG_SERVICE, 
+				// IF used
+				TAG_PERMISSION,  
 				TAG_USES_PERMISSION
 				);
 	}
+	
 	
 	
 	// for XmlScanner implementation
@@ -194,57 +254,97 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
         Attr permissionNode = element.getAttributeNodeNS(ANDROID_URI, ATTR_PERMISSION);
         Attr nameNode = element.getAttributeNodeNS(ANDROID_URI, ATTR_NAME);
 		String message = "", tagName = element.getTagName();
-		Issue myIssue = null;
-		System.out.print("\nTag name : ");
-		System.out.print(tagName);
-        if (nameNode != null) {
-        	String permissionName = nameNode.getValue();
-        	// add to list
-        	if (! xmlPermissionsList.contains(permissionName)) {
-        		xmlPermissionsList.add(permissionName);
-        	}
+		//Issue myIssue = null;
+		// 
+		//System.out.print("\nTag name : ");
+		//System.out.print(tagName);
+		if (tagName == TAG_PERMISSION || tagName == TAG_USES_PERMISSION) {
+			if (nameNode != null) {
+				String permissionName = nameNode.getValue();
+				// add to list
+				if (! xmlPermissionsList.contains(permissionName)) {
+					xmlPermissionsList.add(permissionName);
+				}
+				context.report(PERMISSION_REFERENCE_ISSUE, element, context.getLocation(nameNode), message, null);
+			}
+		}
+        else if (tagName == TAG_ACTIVITY || tagName == TAG_PROVIDER || 
+    			tagName == TAG_RECEIVER || tagName == TAG_SERVICE) {
+        	if (permissionNode != null) {
+				String permissionName = permissionNode.getValue();
+				// add to list
+				if (! xmlPermissionsList.contains(permissionName)) {
+					xmlPermissionsList.add(permissionName);
+				}
+				context.report(PERMISSION_REFERENCE_ISSUE, element, context.getLocation(permissionNode), message, null);
+			}
+        }
+        	
+        	
+        	/**
         	if (tagName == TAG_SERVICE) { // declared
         		myIssue = DECLARED_ISSUE;
-        		message = "Permission declaration detected in XML file, name: " + permissionName;
+        		message = "ISSUE: Permission declaration detected in XML file, name: " + permissionName;
 
         	}
         	else if (tagName == TAG_PERMISSION || tagName == TAG_USES_PERMISSION) { // used
         		myIssue = USED_ISSUE;
-        		message = "Permission usage detected in XML file, name: " + permissionName;
+        		message = "ISSUE: Permission usage detected in XML file, name: " + permissionName;
 
         	}
-        	else if (permissionNode != null) {	// enforced
+        	else if (tagName == TAG_ACTIVITY || tagName == TAG_PROVIDER || 
+        			tagName == TAG_RECEIVER || tagName == TAG_SERVICE) {	// enforced        			
         		myIssue = ENFORCED_ISSUE;
-        		message = "The " + tagName + " implemented by the class " + nameNode.getValue() +
-        				" requires permission " + permissionNode.getValue() + " to execute";
+        		// some activity tags not going into this if statement
+        		if (permissionNode != null) {
+        			message = "ISSUE: The " + tagName + " implemented by the class " + nameNode.getValue() +
+        					" requires permission " + permissionNode.getValue() + " to execute";
+        		}
         	}
         	
-        	if (myIssue != null) {
-        		context.report(myIssue, element, context.getLocation(nameNode), message, null);
+        	
+        	if (myIssue == null) {
+        		message = "No applicable issue.";
+        		System.out.println(message);
         	}
-        	else {
-        		message = "No applicable issue found.";
-        		context.report(null, element, context.getLocation(nameNode), message, null);
-        	}
-        }
+        	
+        	
+        	context.report(PERMISSION_REFERENCE_ISSUE, element, context.getLocation(nameNode), message, null);
+            **/
+       
     }
 	
 	 @Override
 	    public void afterCheckProject(@NonNull Context context) {
-		 
-		 String message = "";
+		 Issue myIssue = null;
+		 String message = "\n";
 		 // comparison stuff
 		 if (allPermissionsList.size() == xmlPermissionsList.size()) {
-			 message = "Everything is OK: permissions match up.";
+			 message += "Everything is OK: permissions match up.";
 		 }
 		 else if (allPermissionsList.size() > xmlPermissionsList.size()) {
-			 message = "permissions missing from XML file: program can't run";
+			 message += "permissions missing from XML file: program can't run";
+			 myIssue = UNDER_PRIVILEGE_ISSUE;
 		 }
 		 else {
-			 message = "unused permissions in xml file - over-privilege";
+			 message += "unused permissions in xml file - over-privilege";
+			 myIssue = OVER_PRIVILEGE_ISSUE;
 		 }
 		 
-         context.report(null, null, message, null);
+		 if (myIssue == null)
+			 System.out.println(message);
+		 else
+			 context.report(myIssue, null, message, null);
+         
+         System.out.println("API CALL permissions");
+         for (int i=0; i< allPermissionsList.size(); i++) {
+        	 System.out.println(i + ": " + allPermissionsList.get(i).toString());
+         }
+         
+         System.out.println("XML permissions");
+         for (int i=0; i< xmlPermissionsList.size(); i++) {
+        	 System.out.println(i + ": " + xmlPermissionsList.get(i));
+         }
 
 				 
 		//permission record allPermissionsList 
