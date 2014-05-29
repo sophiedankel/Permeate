@@ -105,7 +105,10 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
         	for (int i=0; i< permissionsToAdd.size(); i++)
         	{
         		boolean contains = false;
+        		String name = permissionsToAdd.get(i).getName();
+        		//System.out.println("Comparing " + name + " to list of size " + allPermissionsList.size());
         		for (int j=0; j< allPermissionsList.size(); j++) {
+        			//System.out.println("Is equal to: " + allPermissionsList.get(j).getName());
         			if (allPermissionsList.get(j).getName().equals(permissionsToAdd.get(i).getName())) {
         				contains = true;
         			}
@@ -181,16 +184,43 @@ public class PermeateDetector extends Detector implements Detector.XmlScanner, D
 	    public void afterCheckProject(@NonNull Context context) {
 		 String message = "\n";		 
 		 
+		 System.out.println("CLASS PERMISSIONS");
+		 for (int i=0; i< allPermissionsList.size(); i++) {
+			 System.out.println(allPermissionsList.get(i));
+		 }
+		 System.out.println("XML PERMISSIONS");
+		 for (int i=0; i< xmlPermissionsList.size(); i++) {
+			 System.out.println(xmlPermissionsList.get(i));
+		 }
+		 
+		 // string list of all permissions found in bytecode
+		 ArrayList<String> classPermissionsList = new ArrayList<String>();
+		 for (int i=0; i<allPermissionsList.size(); i++) {
+			 classPermissionsList.add(allPermissionsList.get(i).getName());
+		 }
+		 
 		 // comparison
-		 if (allPermissionsList.size() < xmlPermissionsList.size()) {
-			 message += "unused permissions in xml file - over-privilege";
+		 if (classPermissionsList.equals(xmlPermissionsList)) {
+			 message += "Everything is OK: permissions match up";
 		 }
-		 else if (allPermissionsList.size() > xmlPermissionsList.size()) {
-			 message += "permissions missing from XML file: program can't run";
+		 else if (classPermissionsList.size() < xmlPermissionsList.size()) {
+			 message += "Unused permissions in XML file - over-privilege";
+			 xmlPermissionsList.removeAll(classPermissionsList);
+			 for (int i=0; i<xmlPermissionsList.size(); i++) {
+				 System.out.println("Unused: " + xmlPermissionsList.get(i));
+			 }
 		 }
-		 else {
-			 message += "Everything is OK: permissions match up.";
+		 else if (classPermissionsList.size() > xmlPermissionsList.size()) {
+			 message += "Permissions missing from XML file: program can't run";
+			 classPermissionsList.removeAll(xmlPermissionsList);
+			 for (int i=0; i<classPermissionsList.size(); i++) {
+				 System.out.println("Undeclared: " + classPermissionsList.get(i));
+			 }
 		 }
+		 else { // TODO: handle the case where it is over-declared, under-declared and also not equal number of permissions
+			 message += "Both over-declared and under-declared";
+		 }
+		 System.out.println(message);
 		 context.report(PERMEATE_DETECTOR_ISSUE, null, message, null);
 	 }
 }
